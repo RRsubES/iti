@@ -10,6 +10,8 @@ BEGIN {
 	line = line_init
 	pr_minus = sprintf("%%-%ds\n", WIDTH_MAX)
 	pr_plus = sprintf("%%%ds\n", WIDTH_MAX)
+	#print "pr_minus", pr_minus
+	#print "pr_plus", pr_plus
 	header = ""
 	# keep header
 	getline; print
