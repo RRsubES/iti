@@ -8,7 +8,8 @@ function repeat(ch, num,	i, tmp) {
 BEGIN {
 	line_init = repeat(" ", 23)
 	line = line_init
-	pr_str = sprintf("%%-%ds\n", WIDTH_MAX)
+	pr_minus = sprintf("%%-%ds\n", WIDTH_MAX)
+	pr_plus = sprintf("%%%ds\n", WIDTH_MAX)
 	header = ""
 	# keep header
 	getline; print
@@ -17,10 +18,10 @@ BEGIN {
 # keep first line of the record
 / {7}[A-Z0-9]{3,5} {3,5}[A-Z0-9]{3,5} {3,5}[0-9]+ {5,}[0-9]+/ {
 	if (length(line) > length(line_init)) {
-		printf(pr_str, line)
+		printf(pr_minus, line)
 		line = line_init
 	}
-	printf("%80s\n",  $0)
+	printf(pr_plus,  $0)
 	next
 }
 
@@ -29,7 +30,7 @@ BEGIN {
 	n = split($0, ary, " ")
 	for(i = 1; i <= n; i++) {
 		if (length(line) + length(ary[i]) + 1 >= COL_MAX) {
-			printf(pr_str, line)
+			printf(pr_minus, line)
 			line = line_init
 		}
 		line = line ary[i] " "
@@ -38,5 +39,5 @@ BEGIN {
 
 # never forget the corner cases
 END {
-	printf(pr_str, line)
+	printf(pr_minus, line)
 }
