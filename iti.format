@@ -1,1 +1,1 @@
-sed 's/\x1A//g' "$@" | dos2unix | awk -v COL_MAX=67 -v WIDTH_MAX=80 -f ~/dev/iti/iti.format.awk | unix2dos
+sed 's/\x1A//g' "$@" | dos2unix | awk -v COL_MAX=66 -v WIDTH_MAX=80 -f ~/dev/iti/iti.format.awk | unix2dos

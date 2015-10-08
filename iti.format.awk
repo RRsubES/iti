@@ -6,32 +6,34 @@ function repeat(ch, num,	i, tmp) {
 }
 
 BEGIN {
+	if (COL_MAX >= WIDTH_MAX) {
+		print "oops: ", COL_MAX, "= COL_MAX >= WIDTH_MAX =", WIDTH_MAX > "/dev/stderr"
+		exit 1
+	}
 	line_init = repeat(" ", 23)
 	line = line_init
 	pr_minus = sprintf("%%-%ds\n", WIDTH_MAX)
 	pr_plus = sprintf("%%%ds\n", WIDTH_MAX)
-	#print "pr_minus", pr_minus
-	#print "pr_plus", pr_plus
 	header = ""
 	# keep header
 	getline; print
 }
 
 # keep first line of the record
-/ {7}[A-Z0-9]{3,5} {3,5}[A-Z0-9]{3,5} {3,5}[0-9]+ {5,}[0-9]+/ {
+/^ {7}[A-Z0-9]{2,5} +[A-Z0-9]{2,5} +[0-9]{3} {5}[0-9]{3} +$/ {
 	if (length(line) > length(line_init)) {
 		printf(pr_minus, line)
 		line = line_init
 	}
-	printf(pr_plus,  $0)
+	printf(pr_plus, $0)
 	next
 }
 
-# process of the beacons once the record has been detected
-/( {23})?([A-Z0-9]{3,5}\/?)( [A-Z0-9]{3,5}\/?)* */ {
+#/^( {0,23})([A-Z0-9]{2,5}\/?)( [A-Z0-9]{2,5}\/?)* *$/ {
+{
 	n = split($0, ary, " ")
 	for(i = 1; i <= n; i++) {
-		if (length(line) + length(ary[i]) + 1 >= COL_MAX) {
+		if (length(line) + length(ary[i]) > COL_MAX) {
 			printf(pr_minus, line)
 			line = line_init
 		}
