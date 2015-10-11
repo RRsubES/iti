@@ -12,8 +12,7 @@ BEGIN {
 	}
 	line_init = repeat(" ", 23)
 	line = line_init
-	pr = sprintf("%%-%ds\n", WIDTH_MAX)
-	eader = ""
+	pr_str = sprintf("%%-%ds\n", WIDTH_MAX)
 	# keep header
 	getline; print
 }
@@ -21,19 +20,18 @@ BEGIN {
 # keep first line of the record
 /^ {7}[A-Z0-9]{2,5} +[A-Z0-9]{2,5} +[0-9]{3} {5}[0-9]{3} +$/ {
 	if (length(line) > length(line_init)) {
-		printf(pr, line)
+		printf(pr_str, line)
 		line = line_init
 	}
-	printf(pr, $0)
+	printf(pr_str, $0)
 	next
 }
 
-#/^( {0,23})([A-Z0-9]{2,5}\/?)( [A-Z0-9]{2,5}\/?)* *$/ {
 {
 	n = split($0, ary, " ")
 	for(i = 1; i <= n; i++) {
 		if (length(line) + length(ary[i]) > COL_MAX) {
-			printf(pr, line)
+			printf(pr_str, line)
 			line = line_init
 		}
 		line = line ary[i] " "
@@ -42,5 +40,5 @@ BEGIN {
 
 # never forget the corner cases
 END {
-	printf(pr, line)
+	printf(pr_str, line)
 }
